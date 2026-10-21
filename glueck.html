@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style>
+<title>Good Luck Egg</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@700;900&display=swap">
+<style>
+/* Layout: one spotlight stage. Foil egg -> chocolate -> capsule -> toy bike builds itself -> licence card */
+:root{
+  --bg:#0c2630; --bg-2:#061419; --spot:#1d5263;
+  --foil:#ff8a1f; --foil-dk:#c4520a; --foil-lt:#ffd29a;
+  --choc:#5a2e14; --choc-lt:#8c4d26; --white-choc:#fff4e2;
+  --capsule:#ffd23f; --capsule-dk:#f29f05;
+  --ink:#fff7ec; --muted:#9fc1cb; --red:#d7263d;
+  --display:"Lilita One","Arial Rounded MT Bold","Arial Black",sans-serif;
+  --body:"Nunito",system-ui,-apple-system,sans-serif;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{margin:0;background:radial-gradient(120% 70% at 50% 42%,var(--spot) 0%,var(--bg) 45%,var(--bg-2) 100%) fixed,var(--bg);
+  color:var(--ink);font-family:var(--body);overflow-x:hidden;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  -webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+main{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding-block:20px;text-align:center;box-sizing:border-box}
+.kicker{font-family:var(--display);font-size:clamp(18px,5vw,22px);letter-spacing:.06em;color:var(--foil-lt);margin:0}
+.hint{font-weight:900;font-size:16px;color:var(--muted);margin:0;min-height:1.4em;transition:opacity .3s}
+.hint.pulse{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.45}}
+
+/* ---------- egg scene ---------- */
+.scene{position:relative;width:min(74vw,280px);aspect-ratio:300/400;max-width:100%;transition:transform .5s ease,opacity .5s ease}
+.scene.gone{transform:scale(.6);opacity:0;pointer-events:none}
+.scene>svg{width:100%;height:100%;display:block;overflow:visible}
+.shadow{position:absolute;left:18%;right:18%;bottom:-4%;height:7%;border-radius:50%;background:rgba(0,0,0,.45);filter:blur(8px);animation:shadow 3s ease-in-out infinite}
+@keyframes shadow{50%{transform:scaleX(.88);opacity:.7}}
+#float{animation:float 3s ease-in-out infinite;transform-origin:150px 380px}
+@keyframes float{50%{transform:translateY(-8px)}}
+#shake{transform-origin:150px 370px;transform-box:view-box}
+.wiggle{animation:wiggle .5s ease}
+@keyframes wiggle{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg)}45%{transform:rotate(7deg)}70%{transform:rotate(-3deg)}}
+#foil{transition:transform .35s ease,opacity .25s ease;transform-origin:150px 200px;transform-box:view-box}
+.unwrapped #foil{transform:scale(1.15);opacity:0}
+.crack path{stroke-dasharray:260;stroke-dashoffset:260;transition:stroke-dashoffset .35s ease}
+.c1 .crack.k1 path,.c2 .crack path{stroke-dashoffset:0}
+#top,#bot{transition:transform 1.1s cubic-bezier(.2,.8,.2,1),opacity .6s ease .6s;transform-box:view-box;transform-origin:150px 205px}
+.split #top{transform:translate(-70px,-150px) rotate(-42deg);opacity:0}
+.split #bot{transform:translate(60px,200px) rotate(28deg);opacity:0}
+.split .crack{opacity:0}
+#capsule{opacity:0;transform:translateY(40px) scale(.4);transform-origin:150px 220px;transform-box:view-box;
+  transition:transform .7s cubic-bezier(.3,1.7,.5,1) .35s,opacity .2s .35s}
+.split #capsule{opacity:1;transform:none}
+.split #capsule.idle{animation:capbob 1.2s ease-in-out infinite}
+@keyframes capbob{50%{transform:translateY(-6px) rotate(3deg)}}
+.scene button{all:unset;cursor:pointer;position:absolute;inset:4% 8%;border-radius:50%}
+.scene button:focus-visible{outline:3px solid var(--foil-lt);outline-offset:6px}
+
+/* ---------- prize ---------- */
+.prize{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%}
+.bikeWrap{position:relative;width:min(90vw,340px);max-width:100%}
+.bike{width:100%;display:block;overflow:visible}
+.part{transform-box:fill-box;transform-origin:center;opacity:0;
+  transform:translate(var(--dx),var(--dy)) rotate(var(--r)) scale(.6);
+  transition:transform .75s cubic-bezier(.3,1.5,.5,1) var(--d),opacity .2s var(--d)}
+.build .part{transform:none;opacity:1}
+.spin{transform-box:fill-box;transform-origin:center}
+.rev .spin{animation:spin .35s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.rev .bike{animation:rev .12s linear 8}
+@keyframes rev{50%{transform:translate(1px,-2px)}}
+.vroom{position:absolute;right:2%;top:-4%;font-family:var(--display);font-size:clamp(26px,8vw,36px);color:var(--capsule);
+  transform:rotate(-10deg) scale(0);transition:transform .4s cubic-bezier(.3,1.8,.5,1);text-shadow:0 3px 0 var(--foil-dk)}
+.rev .vroom{transform:rotate(-10deg) scale(1)}
+
+.card{position:relative;width:min(88vw,330px);max-width:100%;box-sizing:border-box;border-radius:14px;padding:14px 16px;text-align:left;color:#3b2230;
+  background:
+    repeating-radial-gradient(circle at 80% 20%,rgba(255,255,255,.35) 0 1px,transparent 1px 7px),
+    linear-gradient(135deg,#f9d3de,#eab0c3 60%,#dca0b6);
+  box-shadow:0 18px 40px rgba(0,0,0,.45);
+  transform:perspective(700px) rotateX(85deg) translateY(30px);opacity:0;transform-origin:50% 100%;
+  transition:transform .8s cubic-bezier(.2,1.2,.4,1),opacity .3s}
+.show .card{transform:none;opacity:1}
+.card h2{font-family:var(--display);font-weight:400;font-size:22px;letter-spacing:.08em;margin:0 0 10px;color:#7a1f42;display:flex;justify-content:space-between;align-items:center}
+.eu{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:6px;background:#1f3f8f;color:#ffd23f;font-size:15px;letter-spacing:0}
+.cardRow{display:grid;grid-template-columns:74px 1fr;gap:14px;align-items:start}
+.photo{width:74px;height:92px;border-radius:8px;background:#f3e6ea;display:grid;place-items:center;border:2px solid rgba(122,31,66,.25)}
+dl{margin:0;display:grid;gap:4px;font-size:13px;min-width:0}
+dl div{display:flex;gap:6px}
+dt{font-weight:900;color:#7a1f42;min-width:16px}
+dd{margin:0;font-weight:700;font-variant-numeric:tabular-nums}
+.stamp{position:absolute;right:12px;bottom:12px;font-family:var(--display);font-size:20px;color:var(--red);border:3px solid var(--red);border-radius:8px;
+  padding:2px 10px;transform:rotate(-14deg) scale(3);opacity:0;transition:transform .35s cubic-bezier(.5,0,.6,1.6),opacity .2s;mix-blend-mode:multiply;background:rgba(255,255,255,.15)}
+.stamped .stamp{transform:rotate(-14deg) scale(1);opacity:.92}
+.msg{display:flex;flex-direction:column;gap:6px;align-items:center;opacity:0;transform:translateY(14px);transition:all .6s ease}
+.stamped .msg{opacity:1;transform:none;transition-delay:.4s}
+.msg h1{font-family:var(--display);font-weight:400;font-size:clamp(28px,8.5vw,40px);line-height:1.05;margin:0;color:var(--capsule);text-wrap:balance;text-shadow:0 3px 0 var(--foil-dk)}
+.msg p{margin:0;font-size:17px;font-weight:700;max-width:30ch;text-wrap:balance;color:var(--ink)}
+.again{all:unset;cursor:pointer;margin-top:4px;font-weight:900;color:var(--muted);font-size:14px;text-decoration:underline;text-underline-offset:3px}
+.again:focus-visible{outline:2px solid var(--foil-lt);outline-offset:4px}
+canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;transition-delay:0s!important}}
+</style>
+</head>
+<body>
+
+<canvas id="fx"></canvas>
+<main id="app">
+  <p class="kicker">Ein Glücksbringer für morgen</p>
+
+  <div class="scene" id="scene">
+    <div class="shadow"></div>
+    <svg viewBox="0 0 300 400" aria-hidden="true">
+      <defs>
+        <path id="eggShape" d="M150 22C74 22 26 148 26 250C26 330 82 384 150 384C218 384 274 330 274 250C274 148 226 22 150 22Z"/>
+        <clipPath id="eggClip"><use href="#eggShape"/></clipPath>
+        <clipPath id="clipTop"><path d="M0 0H300V200L272 216 246 194 220 218 192 196 166 220 140 196 112 218 86 194 58 216 30 196 0 212Z"/></clipPath>
+        <clipPath id="clipBot"><path d="M0 400H300V200L272 216 246 194 220 218 192 196 166 220 140 196 112 218 86 194 58 216 30 196 0 212Z"/></clipPath>
+        <linearGradient id="foilG" x1="0" y1="0" x2="1" y2=".25">
+          <stop offset="0" stop-color="var(--foil-dk)"/><stop offset=".22" stop-color="var(--foil)"/>
+          <stop offset=".36" stop-color="var(--foil-lt)"/><stop offset=".5" stop-color="var(--foil)"/>
+          <stop offset=".72" stop-color="var(--foil-dk)"/><stop offset=".86" stop-color="var(--foil)"/><stop offset="1" stop-color="#9a3d05"/>
+        </linearGradient>
+        <linearGradient id="bandG" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#d9d4cc"/><stop offset=".3" stop-color="#ffffff"/><stop offset=".55" stop-color="#f1ede6"/><stop offset="1" stop-color="#bfb8ad"/>
+        </linearGradient>
+        <radialGradient id="chocG" cx=".38" cy=".32" r=".75">
+          <stop offset="0" stop-color="var(--choc-lt)"/><stop offset=".55" stop-color="var(--choc)"/><stop offset="1" stop-color="#2e1407"/>
+        </radialGradient>
+        <radialGradient id="gloss" cx=".33" cy=".25" r=".35">
+          <stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="capG" x1="0" x2="1"><stop offset="0" stop-color="var(--capsule-dk)"/><stop offset=".35" stop-color="var(--capsule)"/><stop offset=".6" stop-color="#fff1a8"/><stop offset="1" stop-color="var(--capsule-dk)"/></linearGradient>
+      </defs>
+      <g id="float"><g id="shake">
+        <!-- capsule hidden inside -->
+        <g id="capsule">
+          <g id="capBot"><path d="M98 214h104v18c0 38-23 60-52 60s-52-22-52-60z" fill="url(#capG)"/></g>
+          <g id="capTop"><path d="M98 214h104v-14c0-38-23-60-52-60s-52 22-52 60z" fill="url(#capG)"/>
+            <rect x="94" y="206" width="112" height="12" rx="6" fill="var(--capsule-dk)"/>
+            <ellipse cx="126" cy="168" rx="10" ry="18" fill="#fff" opacity=".55"/></g>
+        </g>
+        <!-- chocolate egg -->
+        <g id="bot" clip-path="url(#clipBot)">
+          <use href="#eggShape" fill="var(--white-choc)"/>
+          <use href="#eggShape" fill="url(#chocG)" transform="translate(150 203) scale(.97) translate(-150 -203)"/>
+          <path d="M0 204L30 196 58 216 86 194 112 218 140 196 166 220 192 196 220 218 246 194 272 216 300 200" stroke="var(--white-choc)" stroke-width="9" fill="none" clip-path="url(#eggClip)" opacity=".95"/>
+          <use href="#eggShape" fill="url(#gloss)"/>
+        </g>
+        <g id="top" clip-path="url(#clipTop)">
+          <use href="#eggShape" fill="var(--white-choc)"/>
+          <use href="#eggShape" fill="url(#chocG)" transform="translate(150 203) scale(.97) translate(-150 -203)"/>
+          <path d="M0 212L30 196 58 216 86 194 112 218 140 196 166 220 192 196 220 218 246 194 272 216 300 200" stroke="var(--white-choc)" stroke-width="9" fill="none" clip-path="url(#eggClip)" opacity=".95"/>
+          <use href="#eggShape" fill="url(#gloss)"/>
+        </g>
+        <g class="crack k1"><path d="M150 60l-12 28 16 14-14 30 10 22" stroke="#1e0b03" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+        <g class="crack"><path d="M154 102l26 12-8 22 22 16M140 132l-30 8 8 24-20 14" stroke="#1e0b03" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+        <!-- foil wrapper -->
+        <g id="foil">
+          <use href="#eggShape" fill="url(#foilG)"/>
+          <g clip-path="url(#eggClip)">
+            <g id="stars" fill="var(--foil-lt)" opacity=".55"></g>
+            <path d="M0 150Q150 128 300 150V246Q150 226 0 246Z" fill="url(#bandG)"/>
+            <path d="M0 150Q150 128 300 150" stroke="var(--red)" stroke-width="4" fill="none"/>
+            <path d="M0 246Q150 226 300 246" stroke="var(--red)" stroke-width="4" fill="none"/>
+            <text x="150" y="186" text-anchor="middle" font-family="Lilita One,Arial Black,sans-serif" font-size="34" fill="var(--red)" letter-spacing="1">GOOD LUCK</text>
+            <text x="150" y="222" text-anchor="middle" font-family="Lilita One,Arial Black,sans-serif" font-size="30" fill="var(--foil-dk)" letter-spacing="6">EGG</text>
+            <g transform="translate(112 260) scale(.5)" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity=".9">
+              <circle cx="22" cy="60" r="20"/><circle cx="130" cy="60" r="20"/>
+              <path d="M22 60l32-30h42l34 30M54 30l14-14h24M96 30l16-18"/>
+            </g>
+            <text x="150" y="330" text-anchor="middle" font-family="Nunito,sans-serif" font-weight="900" font-size="12" fill="#fff" opacity=".85" letter-spacing="3">EDITION FAHRPRÜFUNG</text>
+            <g id="crinkle" fill="none" stroke-linecap="round"></g>
+            <path d="M60 60C110 40 120 120 70 200" stroke="#fff" stroke-opacity=".35" stroke-width="14" fill="none" stroke-linecap="round"/>
+          </g>
+          <path d="M138 24l12-14 12 14" fill="var(--foil)" stroke="var(--foil-dk)" stroke-width="2" stroke-linejoin="round"/>
+        </g>
+      </g></g>
+    </svg>
+    <button id="tap" aria-label="Ei antippen"></button>
+  </div>
+
+  <section class="prize" id="prize" hidden aria-live="polite">
+    <div class="bikeWrap" id="bikeWrap">
+      <svg class="bike" viewBox="0 0 320 190" aria-hidden="true">
+        <g class="part" style="--dx:-120px;--dy:-60px;--r:-200deg;--d:.0s">
+          <circle cx="62" cy="140" r="36" fill="#15171c"/><circle cx="62" cy="140" r="26" fill="#2a2e36"/>
+          <g class="spin"><circle cx="62" cy="140" r="20" fill="#c9ced6"/><path d="M62 122v36M44 140h36M49 127l26 26M75 127l-26 26" stroke="#7d848f" stroke-width="3"/><circle cx="62" cy="140" r="5" fill="#15171c"/></g>
+        </g>
+        <g class="part" style="--dx:130px;--dy:-70px;--r:220deg;--d:.12s">
+          <circle cx="258" cy="140" r="36" fill="#15171c"/><circle cx="258" cy="140" r="26" fill="#2a2e36"/>
+          <g class="spin"><circle cx="258" cy="140" r="20" fill="#c9ced6"/><path d="M258 122v36M240 140h36M245 127l26 26M271 127l-26 26" stroke="#7d848f" stroke-width="3"/><circle cx="258" cy="140" r="5" fill="#15171c"/></g>
+        </g>
+        <g class="part" style="--dx:0px;--dy:90px;--r:30deg;--d:.26s">
+          <path d="M62 140L118 100H200L258 140" stroke="#c9ced6" stroke-width="8" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+          <rect x="128" y="104" width="62" height="34" rx="8" fill="#3d424d"/>
+          <path d="M136 112h46M136 122h46M136 130h46" stroke="#5c6370" stroke-width="3"/>
+          <path d="M128 132H80l-14 8" stroke="#9aa1ac" stroke-width="7" fill="none" stroke-linecap="round"/>
+        </g>
+        <g class="part" style="--dx:-90px;--dy:-110px;--r:-60deg;--d:.4s">
+          <path d="M120 98c8-30 40-42 76-38l20 4c20 4 30 18 32 34z" fill="var(--foil)"/>
+          <path d="M140 78c14-10 34-12 54-10" stroke="var(--foil-lt)" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <text x="178" y="90" text-anchor="middle" font-family="Lilita One,Arial Black,sans-serif" font-size="15" fill="#fff">GOOD LUCK</text>
+        </g>
+        <g class="part" style="--dx:-140px;--dy:20px;--r:-90deg;--d:.54s">
+          <path d="M84 86h56l-8 16H86c-8 0-10-12-2-16z" fill="#15171c"/>
+        </g>
+        <g class="part" style="--dx:110px;--dy:-120px;--r:120deg;--d:.68s">
+          <path d="M226 74L258 140" stroke="#9aa1ac" stroke-width="8" stroke-linecap="round"/>
+          <path d="M218 54l14 22M210 52h26" stroke="#15171c" stroke-width="8" stroke-linecap="round"/>
+          <circle cx="246" cy="78" r="11" fill="var(--capsule)" stroke="#15171c" stroke-width="3"/>
+        </g>
+      </svg>
+      <span class="vroom">BRUMM!</span>
+    </div>
+
+    <div class="card" id="card">
+      <h2>FÜHRERSCHEIN <span class="eu">D</span></h2>
+      <div class="cardRow">
+        <div class="photo" aria-hidden="true">
+          <svg width="54" height="54" viewBox="0 0 60 60"><path d="M8 38C8 18 20 8 34 8s20 12 20 26v8H30l-4 8H10z" fill="var(--foil)"/><path d="M30 26h22v12H30z" fill="#15171c" opacity=".85"/><path d="M14 30c2-10 8-16 16-17" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" opacity=".6"/></svg>
+        </div>
+        <dl>
+          <div><dt>1.</dt><dd>Die beste Schwester</dd></div>
+          <div><dt>4a.</dt><dd>22.10.2026</dd></div>
+          <div><dt>9.</dt><dd>Motorrad</dd></div>
+          <div><dt>12.</dt><dd>Schulterblick nicht vergessen</dd></div>
+        </dl>
+      </div>
+      <span class="stamp">GOOD LUCK</span>
+    </div>
+
+    <div class="msg">
+      <h1>Morgen fährst du allen davon!</h1>
+      <p>Ruhig bleiben, Schulterblick, Gas geben. Ich drück dir alle Daumen!</p>
+      <button class="again" id="again">Nochmal auspacken</button>
+    </div>
+  </section>
+
+  <p class="hint pulse" id="hint">Tipp aufs Ei zum Auspacken</p>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+const app=$('app'),scene=$('scene'),shake=$('shake'),hint=$('hint'),prize=$('prize'),cap=$('capsule');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// foil texture: crinkles and stars
+(function(){
+  const NS='http://www.w3.org/2000/svg',cr=$('crinkle'),st=$('stars');let seed=7;
+  const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+  for(let i=0;i<70;i++){
+    let x=20+rnd()*260,y=20+rnd()*370,d=`M${x} ${y}`;
+    for(let k=0;k<3;k++){x+=(rnd()-.5)*40;y+=(rnd()-.5)*30;d+=`L${x.toFixed(1)} ${y.toFixed(1)}`}
+    const p=document.createElementNS(NS,'path');p.setAttribute('d',d);
+    p.setAttribute('stroke',i%2?'rgba(255,255,255,.35)':'rgba(90,30,0,.22)');p.setAttribute('stroke-width',(.6+rnd()*1.2).toFixed(1));cr.appendChild(p);
+  }
+  const spots=[[70,80],[230,70],[110,110],[200,112],[60,290],[240,290],[90,350],[210,350],[150,62]];
+  spots.forEach(([x,y],i)=>{const s=document.createElementNS(NS,'path');const r=i%2?7:10;
+    s.setAttribute('d',`M${x} ${y-r}L${x+r*.3} ${y-r*.3}L${x+r} ${y}L${x+r*.3} ${y+r*.3}L${x} ${y+r}L${x-r*.3} ${y+r*.3}L${x-r} ${y}L${x-r*.3} ${y-r*.3}Z`);st.appendChild(s)});
+})();
+
+// sound
+let ac;
+function audio(){try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume()}catch(e){}return ac}
+function noise(dur,freq,vol,type='highpass'){const a=audio();if(!a)return;const b=a.createBuffer(1,a.sampleRate*dur,a.sampleRate),d=b.getChannelData(0);
+  for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);
+  const s=a.createBufferSource(),f=a.createBiquadFilter(),g=a.createGain();s.buffer=b;f.type=type;f.frequency.value=freq;g.gain.value=vol;
+  s.connect(f).connect(g).connect(a.destination);s.start()}
+function tone(f1,f2,dur,vol,type='sine'){const a=audio();if(!a)return;const o=a.createOscillator(),g=a.createGain(),t=a.currentTime;o.type=type;
+  o.frequency.setValueAtTime(f1,t);o.frequency.exponentialRampToValueAtTime(f2,t+dur);g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);
+  o.connect(g).connect(a.destination);o.start(t);o.stop(t+dur)}
+function engine(){const a=audio();if(!a)return;const o=a.createOscillator(),l=a.createOscillator(),lg=a.createGain(),f=a.createBiquadFilter(),g=a.createGain(),t=a.currentTime;
+  o.type='sawtooth';o.frequency.setValueAtTime(55,t);o.frequency.linearRampToValueAtTime(140,t+.45);o.frequency.linearRampToValueAtTime(70,t+1.1);
+  l.frequency.value=28;lg.gain.value=18;l.connect(lg).connect(o.frequency);f.type='lowpass';f.frequency.value=900;
+  g.gain.setValueAtTime(.001,t);g.gain.linearRampToValueAtTime(.18,t+.08);g.gain.linearRampToValueAtTime(.001,t+1.2);
+  o.connect(f).connect(g).connect(a.destination);o.start(t);l.start(t);o.stop(t+1.25);l.stop(t+1.25)}
+const buzz=ms=>{try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}};
+
+// particles
+const cv=$('fx'),cx=cv.getContext('2d');let parts=[],running=false;
+function size(){const r=devicePixelRatio||1;cv.width=innerWidth*r;cv.height=innerHeight*r;cx.setTransform(r,0,0,r,0,0)}
+size();addEventListener('resize',size);
+function center(el){const r=el.getBoundingClientRect();return[r.left+r.width/2,r.top+r.height/2,r.width,r.height]}
+function emit(kind,n,el){if(reduce)return;const[x,y,w,h]=center(el);
+  for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,s=kind==='confetti'?5+Math.random()*10:3+Math.random()*8;
+    const p={kind,x:x+(Math.random()-.5)*w*.6,y:y+(Math.random()-.5)*h*.6,vx:Math.cos(a)*s,vy:Math.sin(a)*s-(kind==='smoke'?1:5),
+      r:Math.random()*6,vr:(Math.random()-.5)*.4,w:kind==='foil'?10+Math.random()*16:kind==='crumb'?3+Math.random()*5:7+Math.random()*7,l:kind==='smoke'?60:140,flip:Math.random()*6};
+    if(kind==='confetti')p.c=['#ffd23f','#ff8a1f','#d7263d','#fff7ec','#4fc3d9','#f9d3de'][i%6];
+    if(kind==='smoke'){p.x=x-w*.32;p.y=y+h*.2;p.vx=-2-Math.random()*3;p.vy=-.5-Math.random();}
+    parts.push(p)}
+  if(!running){running=true;requestAnimationFrame(loop)}}
+function loop(){cx.clearRect(0,0,innerWidth,innerHeight);
+  for(const p of parts){p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;p.flip+=.15;p.l--;
+    if(p.kind==='smoke'){p.vx*=.97;p.w+=.6;cx.globalAlpha=Math.max(0,p.l/60)*.35;cx.fillStyle='#cfd8dc';cx.beginPath();cx.arc(p.x,p.y,p.w,0,7);cx.fill();cx.globalAlpha=1;continue}
+    p.vy+=.28;p.vx*=.985;cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);cx.scale(1,Math.cos(p.flip));
+    if(p.kind==='foil'){const g=cx.createLinearGradient(-p.w/2,0,p.w/2,0);g.addColorStop(0,'#c4520a');g.addColorStop(.5,'#ffd29a');g.addColorStop(1,'#ff8a1f');
+      cx.fillStyle=g;cx.beginPath();cx.moveTo(-p.w/2,-p.w/3);cx.lineTo(p.w/2,-p.w/4);cx.lineTo(p.w/3,p.w/3);cx.lineTo(-p.w/3,p.w/4);cx.fill()}
+    else if(p.kind==='crumb'){cx.fillStyle=Math.random()<.5?'#5a2e14':'#8c4d26';cx.fillRect(-p.w/2,-p.w/2,p.w,p.w)}
+    else{cx.fillStyle=p.c;cx.fillRect(-p.w/2,-p.w/4,p.w,p.w/2)}
+    cx.restore()}
+  parts=parts.filter(p=>p.l>0&&p.y<innerHeight+40);
+  if(parts.length)requestAnimationFrame(loop);else{running=false;cx.clearRect(0,0,innerWidth,innerHeight)}}
+
+function wiggle(){shake.classList.remove('wiggle');void shake.getBBox();shake.classList.add('wiggle')}
+function say(t,p){hint.textContent=t;hint.classList.toggle('pulse',!!p)}
+
+let step=0,timers=[];
+const later=(f,ms)=>timers.push(setTimeout(f,reduce?0:ms));
+$('tap').addEventListener('click',()=>{
+  if(step===0){step=1;scene.classList.add('unwrapped');emit('foil',46,scene);noise(.35,2500,.5);buzz(20);say('Jetzt die Schokolade knacken!',true)}
+  else if(step===1){step=2;wiggle();scene.classList.add('c1');noise(.12,1800,.9);tone(180,90,.1,.4,'triangle');buzz(30);say('Noch einmal, fester!',true)}
+  else if(step===2){step=3;wiggle();scene.classList.add('c2');noise(.18,1500,1);buzz([30,40,60]);
+    later(()=>{scene.classList.add('split');emit('crumb',40,scene);noise(.25,900,.8,'bandpass');tone(500,900,.25,.15);
+      later(()=>cap.classList.add('idle'),1100)},280);
+    say('Öffne die Kapsel!',true)}
+  else if(step===3){step=4;cap.classList.remove('idle');tone(300,1200,.12,.35);tone(900,200,.18,.2,'triangle');buzz(40);emit('confetti',50,scene);say('',false);
+    later(()=>{scene.classList.add('gone')},150);
+    later(()=>{scene.hidden=true;prize.hidden=false;void prize.offsetWidth;prize.classList.add('build');
+      [0,120,260,400,540,680].forEach(t=>later(()=>tone(1400,900,.05,.12,'square'),t+500))},650);
+    later(()=>{prize.classList.add('rev');engine();buzz([60,40,60,40,120]);const bw=$('bikeWrap');for(let i=0;i<6;i++)later(()=>emit('smoke',3,bw),i*140)},2300);
+    later(()=>{prize.classList.add('show')},3200);
+    later(()=>{prize.classList.add('stamped');tone(120,60,.18,.6,'triangle');noise(.1,400,.6,'lowpass');buzz(50);emit('confetti',180,$('card'))},4100);
+  }
+});
+$('again').addEventListener('click',()=>{timers.forEach(clearTimeout);timers=[];step=0;
+  prize.className='prize';prize.hidden=true;scene.hidden=false;scene.className='scene';cap.className.baseVal='';
+  say('Tipp aufs Ei zum Auspacken',true)});
+</script>
+</body>
+</html>
